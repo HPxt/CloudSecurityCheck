@@ -1,0 +1,8 @@
+{
+  "id": "CIS-AWS-3.1",
+  "cloud": "aws",
+  "severity": "critical",
+  "status": "PASS",
+  "evidence": "CloudTrail encontrado",
+  "recommendation": "manter e monitorar"
+}
