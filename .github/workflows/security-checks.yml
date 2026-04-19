@@ -1,0 +1,31 @@
+name: cloud-security-checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate executable scripts
+        run: |
+          test -x checks/aws/logging/check_cloudtrail_enabled.sh
+          test -x checks/aws/iam/check_account_password_policy.sh
+          test -x checks/aws/networking/check_security_groups_open_ports.sh
+          test -x checks/gcp/logging/check_audit_logging_enabled.sh
+          test -x checks/gcp/iam/check_overprivileged_roles.sh
+          test -x checks/gcp/networking/check_firewall_allow_all.sh
+
+      - name: Run sample check (local simulation)
+        run: |
+          ./checks/aws/logging/check_cloudtrail_enabled.sh || true
+
+      - name: Upload evidence examples
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-evidence-examples
+          path: output/examples/
